@@ -1,137 +1,138 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><style>
-body{background:#131314;margin:0;padding:40px;display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;}
-.big svg{width:600px;height:auto;background:#1b1b1d;border:1px solid #333;}
-.small svg{width:280px;height:auto;background:#1b1b1d;border:1px solid #333;}
-</style></head>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1b1b1d">
+<title>Killian Mesnage & la SMX 300</title>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
-<div class="big">
-<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" id="bikesvg">
-  <ellipse cx="155" cy="170" rx="135" ry="9" fill="rgba(0,0,0,0.4)"/>
 
-  <!-- SWINGARM -->
-  <path d="M134 122 L 60 146" stroke="#161616" stroke-width="11" fill="none" stroke-linecap="round"/>
+<div id="app">
 
-  <!-- CADRE (un seul tube net) -->
-  <path d="M206 80 C 182 86, 160 96, 134 122" fill="none" stroke="#9fa4ac" stroke-width="6" stroke-linecap="round"/>
+  <!-- Toast Laura (apparaît par-dessus n'importe quel écran) -->
+  <div id="laura-toast" class="laura-toast hidden">
+    <div class="laura-avatar">💁‍♀️</div>
+    <div class="laura-bubble">
+      <div class="laura-name">Laura</div>
+      <div class="laura-text" id="laura-text"></div>
+    </div>
+  </div>
 
-  <!-- SILENCIEUX -->
-  <path d="M62 120 C 62 113, 71 108, 90 108 C 110 108, 121 115, 121 126 C 121 137, 110 144, 90 144 C 71 144, 62 139, 62 132 Z"
-        fill="#dfe2e7" stroke="#8a8f98" stroke-width="1.5"/>
-  <rect x="117" y="119" width="11" height="13" rx="2" fill="#2c2c30"/>
-  <path d="M166 116 C 152 120, 136 121, 121 124" fill="none" stroke="#c7cad1" stroke-width="7" stroke-linecap="round"/>
+  <!-- ÉCRAN TITRE -->
+  <section id="screen-title" class="screen">
+    <div class="plate plate-hero">
+      <span class="plate-number">1</span>
+    </div>
+    <h1 class="game-title">Killian Mesnage<br><span class="accent">&amp; la SMX 300</span></h1>
+    <p class="subtitle">Enchaîne les trajets, répare la bécane, survis à Laura.</p>
 
-  <!-- MOTEUR -->
-  <rect x="128" y="106" width="42" height="32" rx="5" fill="#2c2c30" stroke="#161616" stroke-width="2"/>
-  <circle cx="149" cy="122" r="8" fill="#161616"/>
+    <div class="bike-showcase" id="bike-showcase"></div>
 
-  <!-- REPOSE-PIED -->
-  <path d="M130 130 L 118 140" stroke="#161616" stroke-width="4.5" stroke-linecap="round"/>
+    <button id="btn-start" class="btn btn-primary btn-big">🏍️ Prendre le guidon</button>
+    <p class="highscore" id="title-highscore"></p>
+  </section>
 
-  <!-- FOURCHE -->
-  <path d="M240 146 L 205 76" stroke="#161616" stroke-width="14" stroke-linecap="round"/>
-  <path d="M240 146 L 205 76" stroke="#eceef1" stroke-width="9" stroke-linecap="round"/>
-  <path d="M245 124 L 227 90 L 236 87 L 253 120 Z" fill="#161616"/>
+  <!-- ÉCRAN GARAGE (hub principal) -->
+  <section id="screen-garage" class="screen hidden">
+    <div class="topbar">
+      <div class="plate plate-stat">
+        <span class="plate-icon">💶</span>
+        <span class="plate-value" id="stat-cash">0€</span>
+      </div>
+      <div class="plate plate-stat">
+        <span class="plate-icon">🏁</span>
+        <span class="plate-value">Trajet <span id="stat-day">1</span></span>
+      </div>
+    </div>
 
-  <!-- TE DE FOURCHE -->
-  <rect x="197" y="70" width="18" height="12" rx="2" fill="#3a3a3a" transform="rotate(-25 206 76)"/>
+    <div class="condition-wrap">
+      <div class="condition-label">
+        <span>État de la SMX 300</span>
+        <span id="condition-percent">100%</span>
+      </div>
+      <div class="condition-bar"><div class="condition-fill" id="condition-fill"></div></div>
+    </div>
 
-  <!-- GUIDON -->
-  <path d="M206 76 L 204 52" stroke="#3a3a3a" stroke-width="5"/>
-  <path d="M174 49 L 232 49" stroke="#161616" stroke-width="7" stroke-linecap="round"/>
-  <circle cx="174" cy="49" r="6.5" fill="#2c2c30"/>
-  <circle cx="232" cy="49" r="6.5" fill="#2c2c30"/>
+    <div class="bike-showcase" id="bike-showcase-garage"></div>
 
-  <!-- GARDE-BOUE AVANT -->
-  <path d="M213 104 C 222 84, 258 80, 270 106 C 271 110, 268 112, 266 109 C 254 88, 226 91, 219 108 C 217 112, 211 109, 213 104 Z"
-        fill="#e2321e" stroke="#161616" stroke-width="1.5"/>
+    <p class="garage-msg" id="garage-msg">Killian regarde sa moto d'un air confiant.</p>
 
-  <!-- SELLE (dessinee AVANT le tank pour que le tank la chevauche legerement) -->
-  <path d="M180 106 L 100 100 L 90 108 L 92 116 L 180 118 Z" fill="#161616"/>
+    <button id="btn-ride" class="btn btn-primary btn-big">🏍️ Partir en trajet</button>
+  </section>
 
-  <!-- CARENAGES / RESERVOIR : grande forme bloc anguleuse -->
-  <path d="M172 110
-           L 174 88
-           C 175 70, 188 58, 208 55
-           L 216 68
-           C 200 71, 190 82, 188 96
-           L 198 106
-           C 190 112, 180 112, 172 110 Z"
-        fill="#e2321e" stroke="#161616" stroke-width="2.5" stroke-linejoin="round"/>
-  <!-- bande turquoise -->
-  <path d="M184 88 C 190 76, 200 65, 211 60" fill="none" stroke="#2ad6d1" stroke-width="6" stroke-linecap="round"/>
-  <!-- plaque numero -->
-  <rect x="180" y="69" width="29" height="22" rx="2" fill="#f4efe2" stroke="#161616" stroke-width="2.5" transform="rotate(-18 194.5 80)"/>
-  <text x="194" y="88" font-size="16" font-weight="900" text-anchor="middle" fill="#161616" font-family="Arial, sans-serif" transform="rotate(-18 194.5 80)">1</text>
+  <!-- ÉCRAN TRAJET (mini-jeu) -->
+  <section id="screen-ride" class="screen hidden">
+    <div class="topbar">
+      <div class="plate plate-stat"><span class="plate-icon">💶</span><span class="plate-value" id="ride-cash">0€</span></div>
+    </div>
 
-  <!-- GARDE-BOUE ARRIERE -->
-  <path d="M96 116 C 88 92, 54 84, 34 104 C 31 107, 34 111, 37 108 C 54 92, 84 98, 91 118 C 92 121, 95 120, 96 116 Z"
-        fill="#e2321e" stroke="#161616" stroke-width="1.5"/>
+    <p class="ride-title">Fonce avant la fin du chrono !</p>
 
-  <!-- ROUE ARRIERE -->
-  <g transform="translate(60,146)">
-    <g id="wheel-rear">
-      <circle r="31" fill="#141414"/>
-      <circle r="31" fill="none" stroke="#3a3a3a" stroke-width="4"/>
-      <circle r="19" fill="none" stroke="#8a8f98" stroke-width="2"/>
-      <circle r="5" fill="#c7cad1"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(0)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(60)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(120)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(180)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(240)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(300)"/>
-      <g stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round">
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(0)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(30)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(60)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(90)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(120)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(150)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(180)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(210)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(240)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(270)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(300)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(330)"/>
-      </g>
-    </g>
-  </g>
+    <div class="timer-wrap">
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+    </div>
 
-  <!-- ROUE AVANT -->
-  <g transform="translate(240,146)">
-    <g id="wheel-front">
-      <circle r="31" fill="#141414"/>
-      <circle r="31" fill="none" stroke="#3a3a3a" stroke-width="4"/>
-      <circle r="19" fill="none" stroke="#8a8f98" stroke-width="2"/>
-      <circle r="22" fill="none" stroke="#c7cad1" stroke-width="1.5" stroke-dasharray="2 4"/>
-      <circle r="5" fill="#c7cad1"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(0)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(60)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(120)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(180)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(240)"/>
-      <line x1="0" y1="0" x2="0" y2="-19" stroke="#8a8f98" stroke-width="1.6" transform="rotate(300)"/>
-      <g stroke="#0a0a0a" stroke-width="3.6" stroke-linecap="round">
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(0)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(30)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(60)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(90)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(120)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(150)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(180)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(210)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(240)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(270)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(300)"/>
-        <line x1="0" y1="-28" x2="0" y2="-34" transform="rotate(330)"/>
-      </g>
-    </g>
-  </g>
-</svg>
+    <div class="bike-showcase" id="bike-showcase-ride"></div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">Distance parcourue</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <button id="btn-accelerate" class="btn btn-accent btn-big btn-accelerate">⚡ ACCÉLÈRE !</button>
+  </section>
+
+  <!-- MODALE PANNE -->
+  <div id="modal-panne" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-icon">🔧</div>
+      <h2 id="panne-title">Panne moteur</h2>
+      <p id="panne-desc">Description de la panne.</p>
+      <p class="panne-cost">Réparation : <strong id="panne-cost">0€</strong></p>
+      <div class="modal-actions">
+        <button id="btn-pay" class="btn btn-primary">Payer la réparation</button>
+        <button id="btn-diy" class="btn btn-secondary">Bricoler soi-même (gratuit, risqué)</button>
+        <button id="btn-cancel-ride" class="btn btn-ghost">Retourner au garage</button>
+      </div>
+      <p class="modal-warning" id="panne-warning"></p>
+    </div>
+  </div>
+
+  <!-- MODALE BRICOLAGE (mini-jeu de réflexe) -->
+  <div id="modal-bricolage" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-icon">🛠️</div>
+      <h2>Bricolage express</h2>
+      <p>Tape pile quand le curseur passe dans la zone verte !</p>
+      <div class="diy-track">
+        <div class="diy-zone" id="diy-zone"></div>
+        <div class="diy-cursor" id="diy-cursor"></div>
+      </div>
+      <button id="btn-diy-tap" class="btn btn-accent btn-big">TAPE !</button>
+    </div>
+  </div>
+
+  <!-- ÉCRAN GAME OVER -->
+  <section id="screen-gameover" class="screen hidden">
+    <div class="plate plate-hero plate-gameover">
+      <span class="plate-number">✕</span>
+    </div>
+    <h1 class="game-title">La SMX a rendu l'âme</h1>
+    <p class="subtitle" id="gameover-msg">Killian pousse la moto jusqu'au garage...</p>
+
+    <div class="results">
+      <div class="result-line">Trajets réussis : <strong id="final-day">0</strong></div>
+      <div class="result-line">Argent final : <strong id="final-cash">0€</strong></div>
+      <div class="result-line" id="new-highscore-line">Nouveau record !</div>
+    </div>
+
+    <button id="btn-restart" class="btn btn-primary btn-big">🔁 Rejouer</button>
+  </section>
+
 </div>
-<div class="small" id="small-container"></div>
-<script>
-document.getElementById('small-container').innerHTML = document.getElementById('bikesvg').outerHTML;
-</script>
-</body></html>
+
+<script src="game.js"></script>
+</body>
+</html>
