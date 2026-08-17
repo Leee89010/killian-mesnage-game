@@ -1,20 +1,24 @@
-[README.md](https://github.com/user-attachments/files/31138695/README.md)
-# Killian Mesnage & la SMX 300 — v3 MAX 🏍️
+[README.md](https://github.com/user-attachments/files/31138898/README.md)# Killian Mesnage & la SMX 300 — v4 🏍️
 
-Petit jeu mobile en HTML/CSS/JS pur (zéro dépendance externe).
+## Changements majeurs vs v3
 
-## Nouveautés v3
+### Nouveau système de trajet (refait de zéro)
+- **Maintiens le bouton ACCÉLÈRE** pour avancer vite (la barre de distance se remplit beaucoup plus vite).
+- Sans maintenir, tu avances lentement → tu risques de manquer de temps.
+- **3 voies** + obstacles (voitures, nids-de-poule, etc.).
+- Flèches ◀ ▶ ou **swipe** sur la route pour changer de voie.
+- Collision = dégâts + petite baisse d’humeur de Laura.
+- Bonus d’argent si tu finis **sans aucune collision**.
 
-- **Pilotage réel** pendant les trajets : flèches gauche/droite (ou swipe) pour changer de voie + obstacles à éviter (voitures, nids-de-poule, rochers…).
-- **Upgrades beaucoup plus chers** + **déblocage par niveau** (il faut atteindre un certain nombre de trajets pour débloquer chaque pièce).
-- **Humeur de Laura ne descend jamais** (elle peut seulement monter).
-- 6 upgrades au total (chaîne, batterie, réservoir, casque, suspensions, moteur).
-- Vibrations, 3 types de trajets, DIY plus dur, etc.
+### Humeur de Laura
+- Elle **descend** maintenant (réparations chères, DIY raté, trajet raté, collisions).
+- Elle monte sur les réussites et quand tu la cajoles.
 
-## Jouer
+### Toujours présent
+- Upgrades chers + déblocage par niveau
+- 6 pièces dans la boutique
+- Vibrations
+- DIY de plus en plus dur
 
-Ouvre `index.html` dans un navigateur (mode mobile recommandé).
-
-## GitHub Pages
-
-Mets les 4 fichiers à la racine du dépôt (noms exacts : `index.html`, `style.css`, `game.js`, `README.md`) et active Pages sur `main` / root.
+## Fichiers
+index.html · style.css · game.js · README.md
