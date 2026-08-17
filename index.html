@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1b1b1d">
-<title>Killian Mesnage & la SMX 300 — v2</title>
+<title>Killian Mesnage & la SMX 300 — v3</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +26,7 @@
       <span class="plate-number">1</span>
     </div>
     <h1 class="game-title">Killian Mesnage<br><span class="accent">&amp; la SMX 300</span></h1>
-    <p class="subtitle">Enchaîne les trajets, upgrade la bécane, gère Laura… et reste en vie.</p>
+    <p class="subtitle">Contrôle la moto, upgrade la bécane, gère Laura… et survive le plus longtemps possible.</p>
 
     <div class="bike-showcase" id="bike-showcase"></div>
 
@@ -43,7 +43,7 @@
       </div>
       <div class="plate plate-stat">
         <span class="plate-icon">🏁</span>
-        <span class="plate-value">Trajet <span id="stat-day">1</span></span>
+        <span class="plate-value">Niv. <span id="stat-day">1</span></span>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
     <div class="garage-actions">
       <button id="btn-ride" class="btn btn-primary btn-big">🏍️ Partir en trajet</button>
       <button id="btn-shop" class="btn btn-secondary">🛒 Boutique</button>
-      <button id="btn-cajole" class="btn btn-ghost">💐 Cajoler Laura (12€)</button>
+      <button id="btn-cajole" class="btn btn-ghost">💐 Cajoler Laura (15€)</button>
     </div>
   </section>
 
@@ -86,7 +86,7 @@
     </div>
 
     <h2 class="shop-title">Boutique SMX</h2>
-    <p class="shop-sub">Améliore ta bécane pour survivre plus longtemps.</p>
+    <p class="shop-sub">Les pièces se débloquent avec le niveau. Elles sont chères… mais vitales.</p>
 
     <div id="shop-list" class="shop-list"></div>
   </section>
@@ -98,20 +98,33 @@
       <div class="plate plate-stat"><span class="plate-icon" id="ride-type-icon">🛣️</span><span class="plate-value" id="ride-type-name">Route</span></div>
     </div>
 
-    <p class="ride-title" id="ride-title">Fonce avant la fin du chrono !</p>
+    <p class="ride-title" id="ride-title">Évite les obstacles et fonce !</p>
 
     <div class="timer-wrap">
       <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
     </div>
 
-    <div class="bike-showcase" id="bike-showcase-ride"></div>
+    <!-- Zone de pilotage -->
+    <div class="road-container" id="road-container">
+      <div class="road">
+        <div class="lane-lines"></div>
+        <div id="obstacles"></div>
+        <div class="bike-on-road" id="bike-on-road">
+          <div class="mini-bike">🏍️</div>
+        </div>
+      </div>
+    </div>
 
     <div class="progress-wrap">
       <div class="progress-label">Distance parcourue</div>
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
 
-    <button id="btn-accelerate" class="btn btn-accent btn-big btn-accelerate">⚡ ACCÉLÈRE !</button>
+    <div class="steer-controls">
+      <button id="btn-left" class="btn btn-steer">◀</button>
+      <button id="btn-accelerate" class="btn btn-accent btn-accelerate-small">⚡ ACCÉLÈRE</button>
+      <button id="btn-right" class="btn btn-steer">▶</button>
+    </div>
   </section>
 
   <!-- MODALE PANNE -->
@@ -153,7 +166,7 @@
     <p class="subtitle" id="gameover-msg">Killian pousse la moto jusqu'au garage...</p>
 
     <div class="results">
-      <div class="result-line">Trajets réussis : <strong id="final-day">0</strong></div>
+      <div class="result-line">Niveau atteint : <strong id="final-day">0</strong></div>
       <div class="result-line">Argent final : <strong id="final-cash">0€</strong></div>
       <div class="result-line">Humeur Laura : <strong id="final-mood">—</strong></div>
       <div class="result-line" id="new-highscore-line">Nouveau record !</div>
