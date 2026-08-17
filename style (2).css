@@ -1,0 +1,637 @@
+/* ===========================================================
+   Killian Mesnage & la SMX 300 — styles v1 (base pour v2)
+   =========================================================== */
+
+:root {
+  --bg: #121214;
+  --bg-card: #1b1b1d;
+  --bg-elevated: #242428;
+  --text: #f0ece4;
+  --text-muted: #9a958c;
+  --red: #e2321e;
+  --red-dark: #b52818;
+  --turquoise: #2ad6d1;
+  --green: #3dce7a;
+  --amber: #f0a030;
+  --plate-bg: #f4efe2;
+  --plate-text: #161616;
+  --shadow: 0 8px 24px rgba(0,0,0,0.45);
+  --radius: 16px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  user-select: none;
+}
+
+#app {
+  max-width: 430px;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #1a1a1e 0%, #121214 40%);
+  overflow: hidden;
+}
+
+/* ---------- Screens ---------- */
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 18px 28px;
+  overflow-y: auto;
+  animation: fadeIn 0.25s ease;
+}
+
+.screen.hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Plates (number / stats) ---------- */
+.plate {
+  background: var(--plate-bg);
+  color: var(--plate-text);
+  border-radius: 8px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 0 #c8c2b4, var(--shadow);
+}
+
+.plate-hero {
+  width: 72px;
+  height: 56px;
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.plate-hero .plate-number { line-height: 1; }
+
+.plate-gameover {
+  background: #3a2a2a;
+  color: #ff6b5a;
+  box-shadow: 0 3px 0 #2a1a1a;
+}
+
+.plate-stat {
+  padding: 8px 14px;
+  gap: 6px;
+  font-size: 15px;
+  min-width: 100px;
+}
+
+.plate-icon { font-size: 16px; }
+.plate-value { font-variant-numeric: tabular-nums; }
+
+/* ---------- Typography ---------- */
+.game-title {
+  font-size: 1.7rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.game-title .accent {
+  color: var(--red);
+  font-size: 1.15em;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  text-align: center;
+  margin-bottom: 18px;
+  max-width: 280px;
+}
+
+.highscore {
+  margin-top: 14px;
+  color: var(--turquoise);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* ---------- Bike showcase ---------- */
+.bike-showcase {
+  width: 100%;
+  max-width: 320px;
+  height: 170px;
+  margin: 8px 0 12px;
+  transition: filter 0.4s ease, transform 0.3s ease;
+}
+
+.bike-showcase svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bike-showcase.worn {
+  filter: saturate(0.7) brightness(0.9);
+}
+
+.bike-showcase.broken {
+  filter: saturate(0.35) brightness(0.7) contrast(0.9);
+}
+
+.bike-showcase.riding #wheel-rear,
+.bike-showcase.riding #wheel-front {
+  animation: spin 0.35s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* ---------- Condition bar ---------- */
+.condition-wrap {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.condition-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.condition-bar {
+  height: 12px;
+  background: var(--bg-elevated);
+  border-radius: 99px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.condition-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--green);
+  border-radius: 99px;
+  transition: width 0.4s ease, background 0.3s ease;
+}
+
+/* ---------- Garage message ---------- */
+.garage-msg {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  min-height: 2.4em;
+  margin: 8px 0 16px;
+  max-width: 300px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.15s ease, opacity 0.2s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 320px;
+}
+
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--red) 0%, var(--red-dark) 100%);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid #3a3a40;
+}
+
+.btn-accent {
+  background: linear-gradient(180deg, var(--turquoise) 0%, #1aa8a4 100%);
+  color: #0a1a1a;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  box-shadow: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btn-big {
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.btn-accelerate {
+  margin-top: auto;
+  font-size: 1.25rem;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* ---------- Ride screen ---------- */
+.ride-title {
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.timer-wrap, .progress-wrap {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.timer-bar, .progress-bar {
+  height: 14px;
+  background: var(--bg-elevated);
+  border-radius: 99px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.timer-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--red));
+  border-radius: 99px;
+  transition: width 0.1s linear;
+}
+
+.progress-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--turquoise), #1ec9c4);
+  border-radius: 99px;
+  transition: width 0.08s ease-out;
+}
+
+/* ---------- Modals ---------- */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border: 1px solid #2e2e34;
+}
+
+.modal-icon {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.modal-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.modal-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.panne-cost {
+  font-size: 1.05rem !important;
+  color: var(--text) !important;
+  margin: 12px 0 !important;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.modal-warning {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--amber);
+  min-height: 1.2em;
+}
+
+/* ---------- DIY track ---------- */
+.diy-track {
+  position: relative;
+  height: 36px;
+  background: var(--bg-elevated);
+  border-radius: 99px;
+  margin: 18px 0;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.diy-zone {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: rgba(61, 206, 122, 0.45);
+  border: 2px solid var(--green);
+  border-radius: 99px;
+}
+
+.diy-cursor {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 8px;
+  margin-left: -4px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+  left: 0%;
+}
+
+/* ---------- Laura toast ---------- */
+.laura-toast {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  right: 12px;
+  z-index: 100;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  animation: slideDown 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+
+.laura-toast.hidden {
+  display: none;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.laura-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #3a2a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 2px solid #5a3a5a;
+}
+
+.laura-bubble {
+  background: #2a2230;
+  border: 1px solid #4a3a50;
+  border-radius: 14px 14px 14px 4px;
+  padding: 10px 14px;
+  flex: 1;
+  box-shadow: var(--shadow);
+}
+
+.laura-name {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #e88;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.laura-text {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+/* ---------- Game over ---------- */
+.results {
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 16px 0 24px;
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+}
+
+.result-line {
+  font-size: 1.05rem;
+  margin: 8px 0;
+  color: var(--text-muted);
+}
+
+.result-line strong {
+  color: var(--text);
+  font-weight: 800;
+}
+
+#new-highscore-line {
+  color: var(--turquoise);
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+/* ---------- Safe area for notched phones ---------- */
+@supports (padding: max(0px)) {
+  #app {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+  .screen {
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ========== V2 additions ========== */
+
+.mood-wrap {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.mood-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.mood-bar {
+  height: 10px;
+  background: var(--bg-elevated);
+  border-radius: 99px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.mood-fill {
+  height: 100%;
+  width: 70%;
+  background: linear-gradient(90deg, #e88, #e2321e);
+  border-radius: 99px;
+  transition: width 0.4s ease, background 0.3s ease;
+}
+
+.garage-actions {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-small {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  width: auto;
+  max-width: none;
+}
+
+.shop-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin: 8px 0 4px;
+}
+
+.shop-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.shop-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 20px;
+}
+
+.shop-item {
+  background: var(--bg-elevated);
+  border: 1px solid #333338;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shop-item.owned {
+  opacity: 0.55;
+  border-color: var(--green);
+}
+
+.shop-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.shop-item-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.shop-item-price {
+  background: var(--plate-bg);
+  color: var(--plate-text);
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.shop-item-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.shop-item-btn {
+  margin-top: 4px;
+}
