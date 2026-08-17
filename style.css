@@ -1,0 +1,365 @@
+/* ===========================================================
+   Killian Mesnage & la SMX 300 — styles
+   Palette : asphalte / plaque de course / rouge-noir-turquoise
+   =========================================================== */
+
+:root {
+  --red: #e2321e;
+  --red-dark: #a3220f;
+  --black: #161616;
+  --charcoal: #232326;
+  --charcoal-2: #2c2c30;
+  --cyan: #2ad6d1;
+  --cream: #f4efe2;
+  --silver: #c7cad1;
+  --asphalt: #131314;
+  --green: #3fbf6a;
+  --amber: #e0a527;
+
+  --radius: 14px;
+  --shadow-hard: 0 6px 0 rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--asphalt);
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--cream);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 26px),
+    radial-gradient(ellipse at 50% -10%, #262628 0%, var(--asphalt) 60%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  padding: 20px 18px 34px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Écrans ---------- */
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  animation: fadeIn .35s ease;
+}
+.hidden { display: none !important; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Typo ---------- */
+.game-title {
+  font-size: 1.7rem;
+  line-height: 1.15;
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  margin: 14px 0 6px;
+}
+.game-title .accent { color: var(--red); }
+
+.subtitle {
+  color: var(--silver);
+  font-size: 0.95rem;
+  margin: 0 0 10px;
+}
+
+.ride-title {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 6px 0 10px;
+  color: var(--cyan);
+}
+
+.highscore {
+  color: var(--amber);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+/* ---------- Plaques (motif signature, façon plaque de course) ---------- */
+.plate {
+  background: var(--cream);
+  color: var(--black);
+  border: 3px solid var(--black);
+  border-radius: 8px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  box-shadow: var(--shadow-hard);
+  position: relative;
+  overflow: hidden;
+}
+.plate::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8px;
+  background: linear-gradient(var(--red) 50%, var(--cyan) 50%);
+}
+.plate-hero {
+  padding: 10px 22px;
+  margin-top: 6px;
+}
+.plate-hero .plate-number {
+  font-size: 2.4rem;
+  padding-left: 8px;
+}
+.plate-gameover { border-color: var(--red); }
+
+.plate-stat {
+  font-size: 0.85rem;
+  padding: 6px 10px 6px 14px;
+}
+.plate-icon { font-size: 1rem; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  padding: 13px 20px;
+  font-size: 0.95rem;
+  transition: transform .08s ease, filter .15s ease;
+  box-shadow: var(--shadow-hard);
+}
+.btn:active { transform: translateY(4px); box-shadow: none; }
+
+.btn-primary { background: var(--red); color: var(--cream); }
+.btn-accent { background: var(--cyan); color: var(--black); }
+.btn-secondary { background: var(--charcoal-2); color: var(--cream); border: 2px solid var(--silver); }
+.btn-ghost { background: transparent; color: var(--silver); box-shadow: none; text-decoration: underline; font-weight: 600; text-transform: none; }
+
+.btn-big { width: 100%; padding: 16px 20px; font-size: 1.05rem; margin-top: 14px; }
+
+.btn-accelerate {
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+}
+
+/* ---------- Moto (SVG injecté par JS) ---------- */
+.bike-showcase {
+  width: 100%;
+  max-width: 320px;
+  margin: 10px auto;
+}
+.bike-showcase svg { width: 100%; height: auto; display: block; }
+
+.bike-showcase.riding #wheel-front,
+.bike-showcase.riding #wheel-rear {
+  animation: spin .35s linear infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.bike-showcase.worn svg { filter: saturate(0.5) brightness(0.85); }
+.bike-showcase.broken svg { filter: saturate(0.25) brightness(0.7); }
+
+/* ---------- Barres (état moto / distance / chrono) ---------- */
+.condition-wrap, .progress-wrap, .timer-wrap {
+  width: 100%;
+  margin: 8px 0;
+}
+.condition-label, .progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--silver);
+  margin-bottom: 4px;
+}
+.condition-bar, .progress-bar, .timer-bar {
+  width: 100%;
+  height: 16px;
+  background: var(--charcoal-2);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--black);
+}
+.condition-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--green);
+  transition: width .3s ease, background .3s ease;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--cyan);
+  transition: width .12s ease;
+}
+.timer-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--amber);
+  transition: width .1s linear;
+}
+
+.garage-msg {
+  min-height: 40px;
+  font-style: italic;
+  color: var(--silver);
+  font-size: 0.9rem;
+  margin: 4px 0 2px;
+}
+
+/* ---------- Toast Laura ---------- */
+.laura-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 36px);
+  max-width: 424px;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--cream);
+  color: var(--black);
+  border-radius: 12px;
+  border: 3px solid var(--black);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-hard);
+  animation: toastIn .25s ease;
+}
+.laura-toast.hidden { display: none; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.laura-avatar { font-size: 1.6rem; line-height: 1; }
+.laura-name {
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--red-dark);
+}
+.laura-text { font-size: 0.88rem; line-height: 1.25; }
+
+/* ---------- Modales ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  padding: 20px;
+}
+.modal-overlay.hidden { display: none; }
+
+.modal-card {
+  background: var(--charcoal);
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-icon { font-size: 2.2rem; margin-bottom: 4px; }
+.modal-card h2 { margin: 4px 0 8px; text-transform: uppercase; font-size: 1.15rem; }
+.modal-card p { color: var(--silver); font-size: 0.9rem; margin: 4px 0; }
+.panne-cost strong { color: var(--amber); font-size: 1.1rem; }
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+.modal-warning {
+  color: var(--red);
+  font-weight: 700;
+  min-height: 18px;
+  font-size: 0.82rem;
+}
+
+/* ---------- Mini-jeu bricolage ---------- */
+.diy-track {
+  position: relative;
+  width: 100%;
+  height: 26px;
+  background: var(--charcoal-2);
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+.diy-zone {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: rgba(63, 191, 106, 0.55);
+  border-left: 2px solid var(--green);
+  border-right: 2px solid var(--green);
+}
+.diy-cursor {
+  position: absolute;
+  top: -2px; bottom: -2px;
+  width: 5px;
+  background: var(--cream);
+  box-shadow: 0 0 6px rgba(255,255,255,0.8);
+  left: 0%;
+}
+
+/* ---------- Résultats fin de partie ---------- */
+.results {
+  background: var(--charcoal);
+  border: 2px solid var(--black);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  width: 100%;
+  margin: 16px 0 4px;
+}
+.result-line { font-size: 0.95rem; margin: 6px 0; }
+.result-line strong { color: var(--cyan); }
+#new-highscore-line { color: var(--amber); font-weight: 800; display: none; }
+
+/* ---------- Petits écrans très étroits ---------- */
+@media (max-width: 340px) {
+  .game-title { font-size: 1.4rem; }
+  .btn-big { font-size: 0.95rem; }
+}

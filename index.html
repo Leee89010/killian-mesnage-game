@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1b1b1d">
+<title>Killian Mesnage & la SMX 300</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Toast Laura (apparaît par-dessus n'importe quel écran) -->
+  <div id="laura-toast" class="laura-toast hidden">
+    <div class="laura-avatar">💁‍♀️</div>
+    <div class="laura-bubble">
+      <div class="laura-name">Laura</div>
+      <div class="laura-text" id="laura-text"></div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN TITRE -->
+  <section id="screen-title" class="screen">
+    <div class="plate plate-hero">
+      <span class="plate-number">1</span>
+    </div>
+    <h1 class="game-title">Killian Mesnage<br><span class="accent">&amp; la SMX 300</span></h1>
+    <p class="subtitle">Enchaîne les trajets, répare la bécane, survis à Laura.</p>
+
+    <div class="bike-showcase" id="bike-showcase"></div>
+
+    <button id="btn-start" class="btn btn-primary btn-big">🏍️ Prendre le guidon</button>
+    <p class="highscore" id="title-highscore"></p>
+  </section>
+
+  <!-- ÉCRAN GARAGE (hub principal) -->
+  <section id="screen-garage" class="screen hidden">
+    <div class="topbar">
+      <div class="plate plate-stat">
+        <span class="plate-icon">💶</span>
+        <span class="plate-value" id="stat-cash">0€</span>
+      </div>
+      <div class="plate plate-stat">
+        <span class="plate-icon">🏁</span>
+        <span class="plate-value">Trajet <span id="stat-day">1</span></span>
+      </div>
+    </div>
+
+    <div class="condition-wrap">
+      <div class="condition-label">
+        <span>État de la SMX 300</span>
+        <span id="condition-percent">100%</span>
+      </div>
+      <div class="condition-bar"><div class="condition-fill" id="condition-fill"></div></div>
+    </div>
+
+    <div class="bike-showcase" id="bike-showcase-garage"></div>
+
+    <p class="garage-msg" id="garage-msg">Killian regarde sa moto d'un air confiant.</p>
+
+    <button id="btn-ride" class="btn btn-primary btn-big">🏍️ Partir en trajet</button>
+  </section>
+
+  <!-- ÉCRAN TRAJET (mini-jeu) -->
+  <section id="screen-ride" class="screen hidden">
+    <div class="topbar">
+      <div class="plate plate-stat"><span class="plate-icon">💶</span><span class="plate-value" id="ride-cash">0€</span></div>
+    </div>
+
+    <p class="ride-title">Fonce avant la fin du chrono !</p>
+
+    <div class="timer-wrap">
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+    </div>
+
+    <div class="bike-showcase" id="bike-showcase-ride"></div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">Distance parcourue</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <button id="btn-accelerate" class="btn btn-accent btn-big btn-accelerate">⚡ ACCÉLÈRE !</button>
+  </section>
+
+  <!-- MODALE PANNE -->
+  <div id="modal-panne" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-icon">🔧</div>
+      <h2 id="panne-title">Panne moteur</h2>
+      <p id="panne-desc">Description de la panne.</p>
+      <p class="panne-cost">Réparation : <strong id="panne-cost">0€</strong></p>
+      <div class="modal-actions">
+        <button id="btn-pay" class="btn btn-primary">Payer la réparation</button>
+        <button id="btn-diy" class="btn btn-secondary">Bricoler soi-même (gratuit, risqué)</button>
+        <button id="btn-cancel-ride" class="btn btn-ghost">Retourner au garage</button>
+      </div>
+      <p class="modal-warning" id="panne-warning"></p>
+    </div>
+  </div>
+
+  <!-- MODALE BRICOLAGE (mini-jeu de réflexe) -->
+  <div id="modal-bricolage" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-icon">🛠️</div>
+      <h2>Bricolage express</h2>
+      <p>Tape pile quand le curseur passe dans la zone verte !</p>
+      <div class="diy-track">
+        <div class="diy-zone" id="diy-zone"></div>
+        <div class="diy-cursor" id="diy-cursor"></div>
+      </div>
+      <button id="btn-diy-tap" class="btn btn-accent btn-big">TAPE !</button>
+    </div>
+  </div>
+
+  <!-- ÉCRAN GAME OVER -->
+  <section id="screen-gameover" class="screen hidden">
+    <div class="plate plate-hero plate-gameover">
+      <span class="plate-number">✕</span>
+    </div>
+    <h1 class="game-title">La SMX a rendu l'âme</h1>
+    <p class="subtitle" id="gameover-msg">Killian pousse la moto jusqu'au garage...</p>
+
+    <div class="results">
+      <div class="result-line">Trajets réussis : <strong id="final-day">0</strong></div>
+      <div class="result-line">Argent final : <strong id="final-cash">0€</strong></div>
+      <div class="result-line" id="new-highscore-line">Nouveau record !</div>
+    </div>
+
+    <button id="btn-restart" class="btn btn-primary btn-big">🔁 Rejouer</button>
+  </section>
+
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
