@@ -377,19 +377,29 @@ function onDiyTap() {
   }
 }
 
-/* ========== NOUVEAU SYSTÈME DE TRAJET ========== */
+/* ========== PHYSIQUE TRAJET OPTIMISÉE ========== */
 let rideRAF = null;
 let rideStartTime = 0;
+let lastFrameTime = 0;
 let rideDuration = 12;
 let rideProgress = 0;
-let bikeLane = 1;
+let bikeLane = 1;           // cible (0, 1, 2)
+let bikeX = 50;             // position visuelle en % (lerp)
+let bikeSpeedX = 0;         // vélocité latérale
+let currentSpeed = 0;       // vitesse avant (0 → 1+)
+let targetSpeed = 0;
 let obstacles = [];
-let obstacleId = 0;
 let lastObstacleSpawn = 0;
 let isBoosting = false;
 let collisionsThisRide = 0;
+let shakeTime = 0;
+let invincibleTime = 0;     // frames d'invincibilité après collision
 const LANE_POS = [18, 50, 82];
-const TICK = 1000 / 60;
+const LANE_LERP = 14;       // plus haut = changement de voie plus snappy
+const ACCEL = 3.8;          // accélération vers targetSpeed
+const DECEL = 2.6;
+const BASE_SPEED = 0.38;
+const BOOST_SPEED = 1.0;
 
 function startRide() {
   let pool = RIDE_TYPES;
@@ -400,12 +410,18 @@ function startRide() {
   rideProgress = 0;
   rideDuration = rt.duration;
   bikeLane = 1;
+  bikeX = LANE_POS[1];
+  bikeSpeedX = 0;
+  currentSpeed = 0;
+  targetSpeed = BASE_SPEED;
   obstacles = [];
-  obstacleId = 0;
   lastObstacleSpawn = 0;
   isBoosting = false;
   collisionsThisRide = 0;
+  shakeTime = 0;
+  invincibleTime = 0;
   rideStartTime = performance.now();
+  lastFrameTime = rideStartTime;
 
   document.getElementById('progress-fill').style.width = '0%';
   document.getElementById('timer-fill').style.width = '100%';
@@ -414,9 +430,9 @@ function startRide() {
   document.getElementById('ride-type-name').textContent = rt.name;
   document.getElementById('ride-hint').textContent = "Maintiens ACCÉLÈRE + évite les obstacles";
   document.getElementById('obstacles').innerHTML = '';
-  document.getElementById('road').classList.remove('boosting');
+  document.getElementById('road').classList.remove('boosting', 'shaking');
   document.getElementById('btn-accelerate').classList.remove('active');
-  updateBikePosition();
+  updateBikeVisual();
 
   showScreen('screen-ride');
   cancelAnimationFrame(rideRAF);
@@ -425,76 +441,135 @@ function startRide() {
   if (Math.random() < 0.22) setTimeout(() => showLaura('random'), 1400);
 }
 
-function updateBikePosition() {
-  document.getElementById('bike-on-road').style.left = LANE_POS[bikeLane] + '%';
+function updateBikeVisual() {
+  const el = document.getElementById('bike-on-road');
+  el.style.left = bikeX + '%';
+  // légère inclinaison selon la vélocité latérale
+  const tilt = Math.max(-12, Math.min(12, bikeSpeedX * 1.8));
+  el.style.transform = `translateX(-50%) rotate(${tilt}deg)`;
 }
 
 function steer(dir) {
   bikeLane = Math.max(0, Math.min(2, bikeLane + dir));
-  updateBikePosition();
-  vibrate(12);
+  vibrate(10);
 }
 
 function spawnObstacle() {
   const lane = Math.floor(Math.random() * 3);
-  const types = ['🚗', '🚙', '🕳️', '🪨', '🚧', '🚕'];
+  // évite de spawner pile sur la même lane trop souvent
+  const types = ['🚗', '🚙', '🕳️', '🪨', '🚧', '🚕', '🚛'];
   const el = document.createElement('div');
   el.className = 'obstacle';
   el.textContent = pick(types);
   el.style.left = LANE_POS[lane] + '%';
-  el.style.top = '-50px';
+  el.style.top = '-55px';
   document.getElementById('obstacles').appendChild(el);
-  obstacles.push({ el, lane, y: -50, hit: false });
+
+  // vitesse légèrement variable par obstacle
+  const speedMult = 0.85 + Math.random() * 0.35;
+  obstacles.push({ el, lane, y: -55, hit: false, speedMult });
 }
 
 function rideLoop(now) {
+  // delta time (secondes), clampé pour éviter les gros sauts
+  let dt = (now - lastFrameTime) / 1000;
+  if (dt > 0.05) dt = 0.05;
+  lastFrameTime = now;
+
   const rt = state.currentRideType;
   const elapsed = (now - rideStartTime) / 1000;
   const timeLeft = Math.max(0, rideDuration - elapsed);
 
-  // Timer bar
+  // --- Timer ---
   document.getElementById('timer-fill').style.width = (timeLeft / rideDuration * 100) + '%';
 
-  // Progress : base + boost
-  const baseRate = 5.8; // % per second
-  const boostRate = 14 + state.accelBonus * 10;
-  const rate = isBoosting ? boostRate : baseRate;
-  rideProgress = Math.min(100, rideProgress + rate * (TICK / 1000));
+  // --- Vitesse avant (accélération / décélération fluide) ---
+  targetSpeed = isBoosting ? BOOST_SPEED * (1 + state.accelBonus * 0.5) : BASE_SPEED;
+  if (currentSpeed < targetSpeed) {
+    currentSpeed = Math.min(targetSpeed, currentSpeed + ACCEL * dt);
+  } else {
+    currentSpeed = Math.max(targetSpeed, currentSpeed - DECEL * dt);
+  }
+
+  // --- Progression distance ---
+  const progressRate = 4.2 + currentSpeed * 11.5; // % / sec
+  rideProgress = Math.min(100, rideProgress + progressRate * dt);
   document.getElementById('progress-fill').style.width = rideProgress + '%';
 
-  // Visual boost
+  // --- Visuel route / boost ---
   const road = document.getElementById('road');
-  if (isBoosting) road.classList.add('boosting');
+  if (isBoosting && currentSpeed > 0.7) road.classList.add('boosting');
   else road.classList.remove('boosting');
 
-  // Spawn obstacles
-  const spawnInterval = rt.obstacleBase / (isBoosting ? 1.55 : 1);
-  if (now - lastObstacleSpawn > spawnInterval && timeLeft > 1.5) {
+  // Vitesse d'animation des lignes liée à la vitesse réelle
+  const laneLines = document.getElementById('lane-lines');
+  if (laneLines) {
+    const animDuration = Math.max(0.18, 0.65 - currentSpeed * 0.4);
+    laneLines.style.animationDuration = animDuration + 's';
+  }
+
+  // --- Changement de voie avec inertie (lerp + spring soft) ---
+  const targetX = LANE_POS[bikeLane];
+  const dx = targetX - bikeX;
+  // spring-damper simple
+  bikeSpeedX += dx * LANE_LERP * dt;
+  bikeSpeedX *= Math.pow(0.08, dt); // damping
+  bikeX += bikeSpeedX * dt * 60 * 0.35;
+  // clamp soft
+  if (Math.abs(dx) < 0.15 && Math.abs(bikeSpeedX) < 0.5) {
+    bikeX = targetX;
+    bikeSpeedX = 0;
+  }
+  updateBikeVisual();
+
+  // --- Shake collision ---
+  if (shakeTime > 0) {
+    shakeTime -= dt;
+    if (shakeTime <= 0) road.classList.remove('shaking');
+  }
+
+  if (invincibleTime > 0) invincibleTime -= dt;
+
+  // --- Spawn obstacles (densité liée à la vitesse) ---
+  const spawnInterval = rt.obstacleBase / (0.75 + currentSpeed * 0.9);
+  if (now - lastObstacleSpawn > spawnInterval && timeLeft > 1.4) {
     spawnObstacle();
     lastObstacleSpawn = now;
   }
 
-  // Move obstacles
-  const speed = (isBoosting ? 7.2 : 4.6) + state.day * 0.07;
+  // --- Déplacement obstacles ---
+  const baseObstacleSpeed = 55 + currentSpeed * 95 + state.day * 2.2; // px / sec
+  const roadHeight = 240;
+
   obstacles.forEach(o => {
     if (o.hit) return;
-    o.y += speed;
+    o.y += baseObstacleSpeed * o.speedMult * dt;
     o.el.style.top = o.y + 'px';
 
-    // Collision zone (bike ~ bottom)
-    if (o.y > 155 && o.y < 210 && o.lane === bikeLane && !o.hit) {
+    // Hitbox un peu plus précise
+    const bikeHitY1 = roadHeight - 75;
+    const bikeHitY2 = roadHeight - 18;
+    const sameLane = Math.abs(o.lane - bikeLane) < 0.5 || 
+                     (Math.abs(bikeX - LANE_POS[o.lane]) < 14);
+
+    if (o.y > bikeHitY1 && o.y < bikeHitY2 && sameLane && !o.hit && invincibleTime <= 0) {
       o.hit = true;
-      o.el.style.opacity = '0.25';
-      o.el.style.transform = 'translateX(-50%) scale(0.7)';
+      o.el.style.opacity = '0.2';
+      o.el.style.transform = 'translateX(-50%) scale(0.65)';
       onCollision();
     }
   });
+
+  // Nettoyage
   obstacles = obstacles.filter(o => {
-    if (o.y > 260) { o.el.remove(); return false; }
+    if (o.y > roadHeight + 40) {
+      o.el.remove();
+      return false;
+    }
     return true;
   });
 
-  // End conditions
+  // --- Fin ---
   if (rideProgress >= 100) {
     endRide(true);
     return;
@@ -509,26 +584,33 @@ function rideLoop(now) {
 
 function onCollision() {
   collisionsThisRide++;
-  const baseDmg = 9 + Math.random() * 6;
+  const baseDmg = 8 + Math.random() * 7;
   const dmg = baseDmg * (1 - state.collisionReduction);
   state.condition = Math.max(0, state.condition - dmg);
-  state.mood = Math.max(0, state.mood - 2); // petite descente
-  vibrate([50, 25, 50]);
+  state.mood = Math.max(0, state.mood - 2);
+
+  // ralentissement temporaire
+  currentSpeed *= 0.35;
+  invincibleTime = 0.55;
+  shakeTime = 0.35;
+  document.getElementById('road').classList.add('shaking');
+
+  vibrate([55, 25, 55]);
   document.getElementById('ride-hint').textContent = "Aïe ! Collision…";
   setTimeout(() => {
     if (document.getElementById('screen-ride').classList.contains('hidden')) return;
     document.getElementById('ride-hint').textContent = "Maintiens ACCÉLÈRE + évite les obstacles";
-  }, 900);
+  }, 850);
 }
 
 function endRide(success) {
   cancelAnimationFrame(rideRAF);
   isBoosting = false;
   document.getElementById('btn-accelerate').classList.remove('active');
-  document.getElementById('road').classList.remove('boosting');
+  document.getElementById('road').classList.remove('boosting', 'shaking');
 
   const rt = state.currentRideType || RIDE_TYPES[1];
-  let wear = (7 + Math.random() * 8 + collisionsThisRide * 1.5) * rt.wearMult;
+  let wear = (7 + Math.random() * 8 + collisionsThisRide * 1.6) * rt.wearMult;
   wear *= (1 - state.wearReduction);
   state.condition = Math.max(0, state.condition - wear);
 
@@ -536,7 +618,6 @@ function endRide(success) {
   if (success) {
     earned = Math.round((17 + state.day * 1.7 + Math.random() * 12) * rt.cashMult);
     earned = Math.round(earned * (1 + state.cashBonus));
-    // Bonus si peu de collisions
     if (collisionsThisRide === 0) earned = Math.round(earned * 1.15);
     state.cash += earned;
     state.day += 1;
@@ -545,7 +626,7 @@ function endRide(success) {
   } else {
     earned = Math.round(rideProgress / 100 * 11 * rt.cashMult);
     state.cash += earned;
-    state.mood = Math.max(0, state.mood - 6); // descends
+    state.mood = Math.max(0, state.mood - 6);
     vibrate([45, 30, 45]);
   }
 
